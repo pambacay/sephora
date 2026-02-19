@@ -1,32 +1,6 @@
-sephora-verified-gallery/
-│
-├── package.json
-├── next.config.js
-├── tailwind.config.js
-├── postcss.config.js
-│
-├── pages/
-│   ├── _app.js
-│   └── index.js
-│
-├── components/
-│   ├── Hero.js
-│   ├── TrustBar.js
-│   ├── PAS.js
-│   ├── Gallery.js
-│   ├── Pricing.js
-│   └── RiskReversal.js
-│
-├── public/
-│   └── users/
-│       ├── user1.jpg
-│       ├── user2.jpg
-│       └── user3.jpg
-│
-└── styles/
-    └── globals.css
+
 {
-  "name": "sephora-verified-gallery",
+  "name": "sephora-gallery-sephora-prod",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -37,7 +11,10 @@ sephora-verified-gallery/
   "dependencies": {
     "next": "14.1.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "framer-motion": "^11.0.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "stripe": "^14.0.0"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.0",
@@ -45,227 +22,26 @@ sephora-verified-gallery/
     "autoprefixer": "^10.4.0"
   }
 }
+
+
 module.exports = {
-  content: [
-    "./pages/**/*.{js,jsx}",
-    "./components/**/*.{js,jsx}"
-  ],
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
+
+
+module.exports = {
+  content: ["./app/**/*.{js,jsx}", "./components/**/*.{js,jsx}"],
   theme: {
     extend: {
       colors: {
-        sephora: "#000000",
-        accent: "#ff2d55"
+        sephoraBlack: "#000",
+        sephoraRed: "#ff2d55",
+        sephoraGray: "#f5f5f5"
       }
     }
   },
   plugins: []
-}
-import '../styles/globals.css'
-
-export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />
-}
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-body {
-  font-family: system-ui;
-  background: white;
-}
-import Hero from "../components/Hero"
-import TrustBar from "../components/TrustBar"
-import PAS from "../components/PAS"
-import Gallery from "../components/Gallery"
-import Pricing from "../components/Pricing"
-import RiskReversal from "../components/RiskReversal"
-
-export default function Home() {
-  return (
-    <main>
-      <Hero />
-      <TrustBar />
-      <PAS />
-      <Gallery />
-      <Pricing />
-      <RiskReversal />
-    </main>
-  )
-}
-export default function Hero() {
-  return (
-    <section className="bg-black text-white p-8 text-center">
-      <h1 className="text-4xl font-bold mb-4">
-        Find Makeup That Works For YOUR Skin
-      </h1>
-
-      <p className="mb-6">
-        See real results on real people like you — filtered by skin tone, age, and skin type.
-      </p>
-
-      <button className="bg-accent px-6 py-3 rounded text-white font-semibold">
-        Shop Now
-      </button>
-    </section>
-  )
-}
-export default function TrustBar() {
-  return (
-    <section className="p-6 bg-gray-100 text-center">
-      <p className="font-semibold">
-        ✔ 2.4M Verified Reviews  
-        ✔ 100% Real Customer Photos  
-        ✔ Trusted by 10M+ users
-      </p>
-    </section>
-  )
-}
-export default function PAS() {
-  return (
-    <section className="p-8 text-center">
-
-      <h2 className="text-2xl font-bold mb-4">
-        Stop Guessing What Will Work
-      </h2>
-
-      <p className="mb-3">
-        Most makeup looks perfect in ads but fails in real life.
-      </p>
-
-      <p className="mb-3">
-        Wrong shades waste money and ruin confidence.
-      </p>
-
-      <p className="font-semibold text-accent">
-        Now you can see EXACTLY how products look on people like you.
-      </p>
-
-    </section>
-  )
-}
-import { useState } from "react"
-
-const users = [
-  {
-    img: "/users/user1.jpg",
-    tone: "light",
-    age: "18-24",
-    type: "dry"
-  },
-  {
-    img: "/users/user2.jpg",
-    tone: "medium",
-    age: "25-34",
-    type: "oily"
-  },
-  {
-    img: "/users/user3.jpg",
-    tone: "dark",
-    age: "35-44",
-    type: "combination"
-  }
-]
-
-export default function Gallery() {
-
-  const [filter, setFilter] = useState("all")
-
-  const filtered =
-    filter === "all"
-      ? users
-      : users.filter(u => u.tone === filter)
-
-  return (
-    <section className="p-8">
-
-      <h2 className="text-2xl font-bold mb-4 text-center">
-        People Like Me
-      </h2>
-
-      <div className="flex justify-center gap-2 mb-6">
-
-        <button onClick={() => setFilter("all")}
-          className="border px-3 py-1">
-          All
-        </button>
-
-        <button onClick={() => setFilter("light")}
-          className="border px-3 py-1">
-          Light
-        </button>
-
-        <button onClick={() => setFilter("medium")}
-          className="border px-3 py-1">
-          Medium
-        </button>
-
-        <button onClick={() => setFilter("dark")}
-          className="border px-3 py-1">
-          Dark
-        </button>
-
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-
-        {filtered.map((user, index) => (
-          <img
-            key={index}
-            src={user.img}
-            className="rounded shadow"
-          />
-        ))}
-
-      </div>
-
-    </section>
-  )
-}
-export default function Pricing() {
-  return (
-    <section className="p-8 text-center bg-gray-50">
-
-      <h2 className="text-2xl font-bold mb-4">
-        Choose Your Perfect Match
-      </h2>
-
-      <div className="flex flex-col md:flex-row gap-4 justify-center">
-
-        <div className="border p-6">
-          <h3>Single Product</h3>
-          <p className="text-xl">$39</p>
-          <button className="bg-black text-white px-4 py-2 mt-3">
-            Buy Now
-          </button>
-        </div>
-
-        <div className="border p-6 bg-accent text-white scale-105">
-          <h3>Best Value Bundle</h3>
-          <p className="text-xl">$59</p>
-          <p>Save 40%</p>
-
-          <button className="bg-white text-black px-4 py-2 mt-3">
-            Get Bundle
-          </button>
-        </div>
-
-      </div>
-
-    </section>
-  )
-}
-export default function RiskReversal() {
-  return (
-    <section className="p-8 text-center">
-
-      <h2 className="text-xl font-bold mb-3">
-        100% Shade Match Guarantee
-      </h2>
-
-      <p>
-        Love it or get your money back within 30 days.
-      </p>
-
-    </section>
-  )
 }
