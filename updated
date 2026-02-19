@@ -1,358 +1,135 @@
-sephora-gallery-pro/
-│
-├── package.json
-├── next.config.js
-├── tailwind.config.js
-├── postcss.config.js
-│
-├── app/
-│   ├── layout.js
-│   └── page.js
-│
-├── components/
-│   ├── Hero.js
-│   ├── TrustBar.js
-│   ├── PAS.js
-│   ├── Gallery.js
-│   ├── Filters.js
-│   ├── ReviewCard.js
-│   ├── Pricing.js
-│   ├── RiskReversal.js
-│   └── Header.js
-│
-├── data/
-│   └── users.js
-│
-├── public/users/
-│   ├── user1.jpg
-│   ├── user2.jpg
-│   ├── user3.jpg
-│   ├── user4.jpg
-│   └── user5.jpg
-│
-└── styles/
-    └── globals.css
-{
-  "name": "sephora-gallery-pro",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "next": "14.1.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "framer-motion": "^11.0.0"
-  },
-  "devDependencies": {
-    "tailwindcss": "^3.4.0",
-    "postcss": "^8.4.0",
-    "autoprefixer": "^10.4.0"
-  }
-}
-import "../styles/globals.css"
+// pages/index.tsx
+import { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+import { motion } from "framer-motion";
 
-export const metadata = {
-  title: "Sephora Verified Gallery",
-  description: "Real people. Real results."
-}
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
-export default function RootLayout({ children }) {
+export default function Home() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const signUp = async () => {
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) alert(error.message);
+    else alert("Check your email to confirm sign-up!");
+  };
+
+  const signIn = async () => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) alert(error.message);
+    else alert("Logged in!");
+  };
+
   return (
-    <html>
-      <body>{children}</body>
-    </html>
-  )
-}
-import Header from "../components/Header"
-import Hero from "../components/Hero"
-import TrustBar from "../components/TrustBar"
-import PAS from "../components/PAS"
-import Gallery from "../components/Gallery"
-import Pricing from "../components/Pricing"
-import RiskReversal from "../components/RiskReversal"
+    <main className="overflow-x-hidden font-sans">
+      {/* Hero Section */}
+      <section className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-r from-pink-200 to-purple-200 text-center p-6">
+        <motion.h1
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-5xl font-bold mb-4"
+        >
+          Find Your Perfect Shade
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-xl mb-8 max-w-xl"
+        >
+          Upload a selfie and get AI-powered shade recommendations. Join our
+          community of beauty enthusiasts!
+        </motion.p>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          className="bg-purple-600 text-white px-6 py-3 rounded-lg"
+        >
+          Get Started
+        </motion.button>
+      </section>
 
-export default function Page() {
-  return (
-    <>
-      <Header />
-      <Hero />
-      <TrustBar />
-      <PAS />
-      <Gallery />
-      <Pricing />
-      <RiskReversal />
-    </>
-  )
-}
-"use client"
+      {/* Trust Bar */}
+      <section className="flex justify-around py-6 bg-gray-50 text-center">
+        {["Free Shipping", "Secure Checkout", "Verified Reviews"].map(
+          (item, i) => (
+            <div key={i} className="text-center">
+              <div className="text-xl font-bold">{item}</div>
+            </div>
+          )
+        )}
+      </section>
 
-import { motion } from "framer-motion"
+      {/* Problem-Agitate-Solve */}
+      <section className="py-20 bg-white text-center">
+        <h2 className="text-3xl font-bold mb-4">Problem. Agitate. Solve.</h2>
+        <p className="max-w-xl mx-auto">
+          Tired of picking the wrong makeup shade? Our AI face scan ensures you
+          always pick the perfect match.
+        </p>
+      </section>
 
-export default function Header() {
-  return (
-    <motion.header
-      initial={{ y: -60 }}
-      animate={{ y: 0 }}
-      className="sticky top-0 bg-white shadow z-50"
-    >
-      <div className="max-w-6xl mx-auto flex justify-between p-4">
-
-        <div className="font-bold text-xl">
-          SEPHORA
+      {/* Social Proof + Pricing / Revenue Booster */}
+      <section className="py-20 bg-gray-50 text-center">
+        <h2 className="text-3xl font-bold mb-4">Loved by Thousands</h2>
+        <div className="flex justify-center gap-4 flex-wrap text-5xl mb-8">
+          {["❤️", "⭐", "💬"].map((icon, i) => (
+            <div key={i}>{icon}</div>
+          ))}
         </div>
-
-        <button className="bg-sephoraRed text-white px-4 py-2 rounded">
-          Shop
+        <p className="text-xl mb-4">
+          Bundle & Save: Buy 3 Shades & Get 20% Off
+        </p>
+        <button className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition">
+          Shop Bundle
         </button>
-
-      </div>
-    </motion.header>
-  )
-}
-"use client"
-
-import { motion } from "framer-motion"
-
-export default function Hero() {
-  return (
-    <section className="bg-black text-white text-center p-16">
-
-      <motion.h1
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-5xl font-bold mb-6"
-      >
-        Find Your Perfect Match
-      </motion.h1>
-
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-      >
-        Verified results from real people like you.
-      </motion.p>
-
-    </section>
-  )
-}
-export const users = [
-
-{
-id:1,
-name:"Sofia",
-age:"18-24",
-tone:"light",
-type:"dry",
-img:"/users/user1.jpg",
-rating:5
-},
-
-{
-id:2,
-name:"Maya",
-age:"25-34",
-tone:"medium",
-type:"oily",
-img:"/users/user2.jpg",
-rating:5
-},
-
-{
-id:3,
-name:"Amara",
-age:"35-44",
-tone:"dark",
-type:"combination",
-img:"/users/user3.jpg",
-rating:4
-},
-
-{
-id:4,
-name:"Lina",
-age:"25-34",
-tone:"light",
-type:"oily",
-img:"/users/user4.jpg",
-rating:5
-},
-
-{
-id:5,
-name:"Zara",
-age:"18-24",
-tone:"medium",
-type:"dry",
-img:"/users/user5.jpg",
-rating:5
-}
-
-]
-export default function Filters({ setFilter }) {
-
-return (
-
-<div className="flex gap-3 flex-wrap justify-center mb-6">
-
-<select onChange={e => setFilter(f=>({...f,tone:e.target.value}))}>
-<option value="">Skin Tone</option>
-<option value="light">Light</option>
-<option value="medium">Medium</option>
-<option value="dark">Dark</option>
-</select>
-
-<select onChange={e => setFilter(f=>({...f,age:e.target.value}))}>
-<option value="">Age</option>
-<option value="18-24">18-24</option>
-<option value="25-34">25-34</option>
-<option value="35-44">35-44</option>
-</select>
-
-<select onChange={e => setFilter(f=>({...f,type:e.target.value}))}>
-<option value="">Skin Type</option>
-<option value="dry">Dry</option>
-<option value="oily">Oily</option>
-<option value="combination">Combination</option>
-</select>
-
-</div>
-
-)
-
-}
-"use client"
-
-import { motion } from "framer-motion"
-
-export default function ReviewCard({ user }) {
-
-return (
-
-<motion.div
-layout
-initial={{ opacity:0 }}
-animate={{ opacity:1 }}
-className="bg-white shadow rounded p-3"
->
-
-<img src={user.img} className="rounded"/>
-
-<div className="flex justify-between mt-2">
-
-<span className="font-semibold">
-{user.name}
-</span>
-
-<span className="text-green-500">
-✔ Verified
-</span>
-
-</div>
-
-<div>
-⭐ {user.rating}/5
-</div>
-
-</motion.div>
-
-)
-
-}
-"use client"
-
-import { useState } from "react"
-import { users } from "../data/users"
-import Filters from "./Filters"
-import ReviewCard from "./ReviewCard"
-
-export default function Gallery() {
-
-const [filter,setFilter]=useState({
-tone:"",
-age:"",
-type:""
-})
-
-const filtered=users.filter(u=>{
-
-return(
-(!filter.tone||u.tone===filter.tone)&&
-(!filter.age||u.age===filter.age)&&
-(!filter.type||u.type===filter.type)
-)
-
-})
-
-return(
-
-<section className="p-10 bg-sephoraGray">
-
-<h2 className="text-3xl font-bold text-center mb-6">
-People Like Me
-</h2>
-
-<Filters setFilter={setFilter}/>
-
-<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-
-{filtered.map(user=>(
-<ReviewCard key={user.id} user={user}/>
-))}
-
-</div>
-
-</section>
-
-)
-
-}
-export default function Pricing(){
-
-return(
-
-<section className="p-12 text-center">
-
-<h2 className="text-3xl font-bold mb-6">
-Choose Your Option
-</h2>
-
-<div className="flex flex-col md:flex-row gap-6 justify-center">
-
-<div className="border p-6">
-Single
-<div>$39</div>
-</div>
-
-<div className="border p-6 bg-sephoraRed text-white scale-110">
-Bundle (Best Value)
-<div>$59</div>
-<div>Save 40%</div>
-</div>
-
-</div>
-
-</section>
-
-)
-
-}
-export default function RiskReversal(){
-
-return(
-
-<section className="text-center p-10">
-
-<h2 className="text-2xl font-bold">
-30-Day Money-Back Guarantee
-</h2>
-
-</section>
-
-)
-
+      </section>
+
+      {/* Risk Reversal */}
+      <section className="py-20 bg-white text-center">
+        <h2 className="text-3xl font-bold mb-4">Love It or Return It</h2>
+        <p className="max-w-xl mx-auto">
+          If your shades aren’t perfect, return within 30 days, no questions
+          asked.
+        </p>
+      </section>
+
+      {/* Authentication */}
+      <section className="py-20 bg-gray-50 flex flex-col items-center">
+        <h2 className="text-3xl font-bold mb-4">Sign Up / Log In</h2>
+        <div className="max-w-md w-full flex flex-col gap-2">
+          <input
+            type="email"
+            placeholder="Email"
+            className="p-2 border rounded"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="p-2 border rounded"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={signUp}
+              className="bg-green-500 text-white px-4 py-2 rounded"
+            >
+              Sign Up
+            </button>
+            <button
+              onClick={signIn}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Log In
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
 }
