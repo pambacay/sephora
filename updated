@@ -1,6 +1,39 @@
-
+sephora-gallery-pro/
+│
+├── package.json
+├── next.config.js
+├── tailwind.config.js
+├── postcss.config.js
+│
+├── app/
+│   ├── layout.js
+│   └── page.js
+│
+├── components/
+│   ├── Hero.js
+│   ├── TrustBar.js
+│   ├── PAS.js
+│   ├── Gallery.js
+│   ├── Filters.js
+│   ├── ReviewCard.js
+│   ├── Pricing.js
+│   ├── RiskReversal.js
+│   └── Header.js
+│
+├── data/
+│   └── users.js
+│
+├── public/users/
+│   ├── user1.jpg
+│   ├── user2.jpg
+│   ├── user3.jpg
+│   ├── user4.jpg
+│   └── user5.jpg
+│
+└── styles/
+    └── globals.css
 {
-  "name": "sephora-gallery-sephora-prod",
+  "name": "sephora-gallery-pro",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -12,9 +45,7 @@
     "next": "14.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "framer-motion": "^11.0.0",
-    "@supabase/supabase-js": "^2.39.0",
-    "stripe": "^14.0.0"
+    "framer-motion": "^11.0.0"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.0",
@@ -22,26 +53,306 @@
     "autoprefixer": "^10.4.0"
   }
 }
+import "../styles/globals.css"
 
-
-module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
+export const metadata = {
+  title: "Sephora Verified Gallery",
+  description: "Real people. Real results."
 }
 
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>{children}</body>
+    </html>
+  )
+}
+import Header from "../components/Header"
+import Hero from "../components/Hero"
+import TrustBar from "../components/TrustBar"
+import PAS from "../components/PAS"
+import Gallery from "../components/Gallery"
+import Pricing from "../components/Pricing"
+import RiskReversal from "../components/RiskReversal"
 
-module.exports = {
-  content: ["./app/**/*.{js,jsx}", "./components/**/*.{js,jsx}"],
-  theme: {
-    extend: {
-      colors: {
-        sephoraBlack: "#000",
-        sephoraRed: "#ff2d55",
-        sephoraGray: "#f5f5f5"
-      }
-    }
-  },
-  plugins: []
+export default function Page() {
+  return (
+    <>
+      <Header />
+      <Hero />
+      <TrustBar />
+      <PAS />
+      <Gallery />
+      <Pricing />
+      <RiskReversal />
+    </>
+  )
+}
+"use client"
+
+import { motion } from "framer-motion"
+
+export default function Header() {
+  return (
+    <motion.header
+      initial={{ y: -60 }}
+      animate={{ y: 0 }}
+      className="sticky top-0 bg-white shadow z-50"
+    >
+      <div className="max-w-6xl mx-auto flex justify-between p-4">
+
+        <div className="font-bold text-xl">
+          SEPHORA
+        </div>
+
+        <button className="bg-sephoraRed text-white px-4 py-2 rounded">
+          Shop
+        </button>
+
+      </div>
+    </motion.header>
+  )
+}
+"use client"
+
+import { motion } from "framer-motion"
+
+export default function Hero() {
+  return (
+    <section className="bg-black text-white text-center p-16">
+
+      <motion.h1
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-5xl font-bold mb-6"
+      >
+        Find Your Perfect Match
+      </motion.h1>
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+      >
+        Verified results from real people like you.
+      </motion.p>
+
+    </section>
+  )
+}
+export const users = [
+
+{
+id:1,
+name:"Sofia",
+age:"18-24",
+tone:"light",
+type:"dry",
+img:"/users/user1.jpg",
+rating:5
+},
+
+{
+id:2,
+name:"Maya",
+age:"25-34",
+tone:"medium",
+type:"oily",
+img:"/users/user2.jpg",
+rating:5
+},
+
+{
+id:3,
+name:"Amara",
+age:"35-44",
+tone:"dark",
+type:"combination",
+img:"/users/user3.jpg",
+rating:4
+},
+
+{
+id:4,
+name:"Lina",
+age:"25-34",
+tone:"light",
+type:"oily",
+img:"/users/user4.jpg",
+rating:5
+},
+
+{
+id:5,
+name:"Zara",
+age:"18-24",
+tone:"medium",
+type:"dry",
+img:"/users/user5.jpg",
+rating:5
+}
+
+]
+export default function Filters({ setFilter }) {
+
+return (
+
+<div className="flex gap-3 flex-wrap justify-center mb-6">
+
+<select onChange={e => setFilter(f=>({...f,tone:e.target.value}))}>
+<option value="">Skin Tone</option>
+<option value="light">Light</option>
+<option value="medium">Medium</option>
+<option value="dark">Dark</option>
+</select>
+
+<select onChange={e => setFilter(f=>({...f,age:e.target.value}))}>
+<option value="">Age</option>
+<option value="18-24">18-24</option>
+<option value="25-34">25-34</option>
+<option value="35-44">35-44</option>
+</select>
+
+<select onChange={e => setFilter(f=>({...f,type:e.target.value}))}>
+<option value="">Skin Type</option>
+<option value="dry">Dry</option>
+<option value="oily">Oily</option>
+<option value="combination">Combination</option>
+</select>
+
+</div>
+
+)
+
+}
+"use client"
+
+import { motion } from "framer-motion"
+
+export default function ReviewCard({ user }) {
+
+return (
+
+<motion.div
+layout
+initial={{ opacity:0 }}
+animate={{ opacity:1 }}
+className="bg-white shadow rounded p-3"
+>
+
+<img src={user.img} className="rounded"/>
+
+<div className="flex justify-between mt-2">
+
+<span className="font-semibold">
+{user.name}
+</span>
+
+<span className="text-green-500">
+✔ Verified
+</span>
+
+</div>
+
+<div>
+⭐ {user.rating}/5
+</div>
+
+</motion.div>
+
+)
+
+}
+"use client"
+
+import { useState } from "react"
+import { users } from "../data/users"
+import Filters from "./Filters"
+import ReviewCard from "./ReviewCard"
+
+export default function Gallery() {
+
+const [filter,setFilter]=useState({
+tone:"",
+age:"",
+type:""
+})
+
+const filtered=users.filter(u=>{
+
+return(
+(!filter.tone||u.tone===filter.tone)&&
+(!filter.age||u.age===filter.age)&&
+(!filter.type||u.type===filter.type)
+)
+
+})
+
+return(
+
+<section className="p-10 bg-sephoraGray">
+
+<h2 className="text-3xl font-bold text-center mb-6">
+People Like Me
+</h2>
+
+<Filters setFilter={setFilter}/>
+
+<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+{filtered.map(user=>(
+<ReviewCard key={user.id} user={user}/>
+))}
+
+</div>
+
+</section>
+
+)
+
+}
+export default function Pricing(){
+
+return(
+
+<section className="p-12 text-center">
+
+<h2 className="text-3xl font-bold mb-6">
+Choose Your Option
+</h2>
+
+<div className="flex flex-col md:flex-row gap-6 justify-center">
+
+<div className="border p-6">
+Single
+<div>$39</div>
+</div>
+
+<div className="border p-6 bg-sephoraRed text-white scale-110">
+Bundle (Best Value)
+<div>$59</div>
+<div>Save 40%</div>
+</div>
+
+</div>
+
+</section>
+
+)
+
+}
+export default function RiskReversal(){
+
+return(
+
+<section className="text-center p-10">
+
+<h2 className="text-2xl font-bold">
+30-Day Money-Back Guarantee
+</h2>
+
+</section>
+
+)
+
 }
